@@ -8,6 +8,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import csv
 import numpy as np
+import codecs
+import csv
 
 header = ['lableName', 'typeName', "url"]
 # header = ['name','age']
@@ -15,10 +17,11 @@ data = [{'lableName':'suliang','typeName':'21'},
         {'lableName':'xiaoming','typeName':'22'},
         {'lableName':'xiaohu','typeName':'25'}]
 
-csvData = []
-
-# print(len(data))
-# exit()
+csvData = [
+   "https://cn.etherscan.com/accounts/label/alchemist-coin",
+   "https://cn.etherscan.com/accounts/label/alchemix-finance",
+   "https://cn.etherscan.com/accounts/label/allbit",
+]
 
 s = Service(r"E:/webroot/etherscan-labelcloud-spider/chromedriver.exe")
 
@@ -65,38 +68,45 @@ def getData():
 
 
 try:
-   driver.get('https://cn.etherscan.com/accounts/label/airdrop-hunter?size=100')
-   # driver.get('https://cn.etherscan.com/accounts/label/balancer?subcatid=1&size=5000')
-   # driver.get('https://cn.etherscan.com/accounts/label/0x-protocol?subcatid=1&size=5000')
-   salary = input('请输入1：') 
-   print('run...' + salary )
-   time.sleep(3)
-   driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
-   time.sleep(2)
-   rows = driver.find_elements(By.CSS_SELECTOR, 'ul.nav.nav-custom.nav-borderless.nav_tabs > li')
-   if (len(rows) > 0):
-   #  for elm in rows:
-      print("执行获取多tab数据")
-      for i in range(len(rows)):
-         if(i == 0):
-            print("走到第一步...")
+   # salary = input('请输入1：') 
+   # print('run...' + salary )
+   with codecs.open('./information.csv', encoding='utf-8-sig') as f:
+      for row in csv.reader(f, skipinitialspace=True):
+         
+         print(row[2])
+         driver.get(row[2]+"?size=10000")
+         driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
+         time.sleep(3)
+
+      # # driver.get('https://cn.etherscan.com/accounts/label/airdrop-hunter?size=100')
+      # # driver.get('https://cn.etherscan.com/accounts/label/balancer?subcatid=1&size=5000')
+      # # driver.get('https://cn.etherscan.com/accounts/label/0x-protocol?subcatid=1&size=5000')
+
+
+         rows = driver.find_elements(By.CSS_SELECTOR, 'ul.nav.nav-custom.nav-borderless.nav_tabs > li')
+         if (len(rows) > 0):
+         #  for elm in rows:
+            print("执行获取多tab数据")
+            for i in range(len(rows)):
+               if(i == 0):
+                  print("走到第一步...")
+                  getData()
+               elif(i == 1):
+                  print("走到第二步...")
+                  driver.get(row[2]+'?subcatid=3-0&size=10000')
+                  time.sleep(5)
+                  getData()
+               elif(i == 2):
+                  print("走到第三步...")
+                  driver.get(row[2]+'?subcatid=2&size=10000')
+                  time.sleep(5)
+                  getData()
+            print(1111)
+            # driver.quit()
+         else:
+            print("执行获取无tab数据")
             getData()
-         elif(i == 1):
-            print("走到第二步...")
-            driver.get('https://cn.etherscan.com/accounts/label/0x-protocol?subcatid=3-0&size=5000')
-            time.sleep(5)
-            getData()
-         elif(i == 2):
-            print("走到第三步...")
-            driver.get('https://cn.etherscan.com/accounts/label/0x-protocol?subcatid=2&size=5000&')
-            time.sleep(5)
-            getData()
-      print(1111)
-      driver.quit()
-   else:
-      print("执行获取无tab数据")
-      getData()
-      driver.quit()
+   driver.quit()
 finally:
    driver.quit()
 print("dene")
