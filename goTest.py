@@ -65,9 +65,9 @@ def getData():
 
 
 try:
-   # driver.get('https://cn.etherscan.com/accounts/label/0x-protocol-ecosystem?size=100')
+   driver.get('https://cn.etherscan.com/accounts/label/airdrop-hunter?size=100')
    # driver.get('https://cn.etherscan.com/accounts/label/balancer?subcatid=1&size=5000')
-   driver.get('https://cn.etherscan.com/accounts/label/0x-protocol?subcatid=1&size=5000')
+   # driver.get('https://cn.etherscan.com/accounts/label/0x-protocol?subcatid=1&size=5000')
    salary = input('请输入1：') 
    print('run...' + salary )
    time.sleep(3)
@@ -96,6 +96,7 @@ try:
    else:
       print("执行获取无tab数据")
       getData()
+      driver.quit()
 finally:
    driver.quit()
 print("dene")
