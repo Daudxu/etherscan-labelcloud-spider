@@ -11,9 +11,9 @@ import numpy as np
 import codecs
 import csv
 
-header = ['labelName', 'tabType', "address", "nameTag"]
+header = ['labelName', "address", "addressLink", "tokenName", "tokenNameLink"]
 
-s = Service(r"E:/webroot/etherscan-labelcloud-spider/a/chromedriver.exe")
+s = Service(r"E:/webroot/etherscan-labelcloud-spider/chromedriver.exe")
 
 options = Options()
 # options.add_argument('--headless')
@@ -32,7 +32,7 @@ options.add_argument('--log-level=3')
 
 driver = webdriver.Chrome(service=s,options=options)
 
-labelName = "beacon-depositor-02"
+labelName = "wormhole"
 
 def isAccounts(accounts):
    # print("accounts:"+ accounts )
@@ -42,25 +42,29 @@ def isAccounts(accounts):
    else:
       return False
 
-def getData(labelName, tabType):
+def getData(labelName):
       labelData = []
       trRows = driver.find_elements(By.CSS_SELECTOR, 'tbody > tr')
       for elm in trRows:
             tdRow = elm.find_elements(By.TAG_NAME, 'td')
-            if len(tdRow) == 4:
-               address = tdRow[0].find_element(By.TAG_NAME, "a").get_attribute('text')    
-               print(address)    
-               nameTag = tdRow[1].text
-               a = np.array({"labelName":labelName, "tabType":tabType, "address":address, "nameTag": nameTag})
+            if len(tdRow) == 6:
+               address = tdRow[1].find_element(By.TAG_NAME, "a").get_attribute('text')    
+               addressLink = tdRow[1].find_element(By.TAG_NAME, "a").get_attribute('href')    
+               tokenName = tdRow[2].find_element(By.TAG_NAME, "a").get_attribute('text') 
+               tokenNameLink = tdRow[1].find_element(By.TAG_NAME, "a").get_attribute('href') 
+               print(address)
+               a = np.array({"labelName":labelName, "address":address, "addressLink":addressLink, "tokenName": tokenName , "tokenNameLink":tokenNameLink})
                labelData = np.append(labelData, a)
       return labelData
 
 
 try:
 
-   url = "https://cn.etherscan.com/accounts/label/beacon-depositor?subcatid=undefined&size=10000&start=10000&col=1&order=asc"
+   url = "https://cn.etherscan.com/tokens/label/wormhole"
    
    driver.get(url)
+   a = input("enter")
+   exit()
    driver.add_cookie({'name': 'etherscan_userid','value':'xudan'})
    driver.add_cookie({'name': 'etherscan_pwd','value':'4792:Qdxb:kAl5dq9QnbrN3OxZFxuZnHQBcXDgRiLPAh4qslPrI/0='})
    driver.add_cookie({'name': 'etherscan_autologin','value': 'True'})
@@ -72,8 +76,9 @@ try:
    driver.refresh()
 
    print("正在获取:"+url+" 数据...")
+   
    tabType = "Others"
-   labelData = getData(labelName, tabType)
+   labelData = getData(labelName)
    with open ("./labelcloud/"+labelName+'.csv','w',encoding='utf-8',newline='') as fp:
       writer =csv.DictWriter(fp,header)
       writer.writeheader()

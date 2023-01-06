@@ -32,7 +32,7 @@ options.add_argument('--log-level=3')
 
 driver = webdriver.Chrome(service=s,options=options)
 
-labelName = "uniswap-01"
+labelName = "beacon-depositor-01"
 
 def isAccounts(accounts):
    # print("accounts:"+ accounts )
@@ -58,7 +58,7 @@ def getData(labelName, tabType):
 
 try:
 
-   url = "https://etherscan.io/accounts/label/uniswap?subcatid=0&size=10000&start=10000&col=1&order=asc"
+   url = "https://cn.etherscan.com/accounts/label/beacon-depositor?subcatid=undefined&size=10000&start=0&col=1&order=asc"
    
    driver.get(url)
    driver.add_cookie({'name': 'etherscan_userid','value':'xudan'})
@@ -67,7 +67,7 @@ try:
    driver.add_cookie({'name': '_pk_ses.10.1f5c','value': '1'})
    driver.add_cookie({'name': '_pk_id.10.1f5c','value': 'ca79f049ddc3dd47.1672822063.'})
    driver.add_cookie({'name': '__stripe_mid','value': '1a324d7d-a5dd-4d7e-9a58-f81f60f6ad787259ab'})
-   driver.add_cookie({'name': '__cf_bm','value': 'ZnFT6s.oztCGMeFNuzJvpbT4UGm.L1Nw5RfSVTnSxXk-1672885917-0-ARUSsUwJKiexo6Dp06qFUCcms3QMfUZ/wLdycGip+dxrZI76cvNmhWbBMNxkZCea9hp1ptkhAJVQO+LEhfZWeW16nJRcepK914jvl2B1xpFFYxRbggVUGwEDeKFihNGzf7wV6yP7ys0HSJwrekGw09g='})
+   driver.add_cookie({'name': '__cf_bm','value': 'MZjdYRyjsGrafQy.RqUcv8bLhqGh.UV4IKeEu77Q1xM-1672967104-0-AcXQgfy763ac1bgHI1N6pb/uHmEq6iH0hnpUG/qRQcsTgKr7MZT0PeJAYQiq8CwU5m4IuoAYZmk3Zz94Eeu2w9r4HAWvp4HZegk5bc4e+2c6D9+aZA4tY1sqLsEyjy0d50pQVLoN/6AGoviRCOfzcbs='})
    driver.add_cookie({'name': 'ASP.NET_SessionId','value': 'qqou3ohtv3iuj0cxoyqsw2re'})
    driver.refresh()
 
