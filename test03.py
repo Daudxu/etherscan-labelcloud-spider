@@ -1,6 +1,6 @@
 from selenium import webdriver
 # import json
-# from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 import time
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -35,6 +35,8 @@ options.add_argument('--log-level=3')
 driver = webdriver.Chrome(service=s,options=options)
 
 def isAccounts(accounts):
+   # print("accounts:"+ accounts )
+   # print(accounts.find("Accounts"))
    if(accounts.find("Accounts") == 0):
       return True
    else:
@@ -48,8 +50,8 @@ def getData(labelName):
             if len(tdRow) == 6:
                address = tdRow[1].find_element(By.TAG_NAME, "a").get_attribute('text')    
                addressLink = tdRow[1].find_element(By.TAG_NAME, "a").get_attribute('href')    
-               tokenName = tdRow[2].find_element(By.TAG_NAME, "a").get_attribute('text') 
-               tokenNameLink = tdRow[1].find_element(By.TAG_NAME, "a").get_attribute('href') 
+               tokenName = "Spam Token"
+               tokenNameLink = ""
                print(address)
                a = np.array({"labelName":labelName, "address":address, "addressLink":addressLink, "tokenName": tokenName , "tokenNameLink":tokenNameLink})
                labelData = np.append(labelData, a)
@@ -77,11 +79,11 @@ try:
    # 刷新页面
    driver.refresh()
 
-   with codecs.open('./tokens.csv', encoding='utf-8-sig') as f:
+   with codecs.open('./test.csv', encoding='utf-8-sig') as f:
       for row in csv.reader(f, skipinitialspace=True):
         print("runner:"+row[2])
         url = row[2]
-        driver.get(url+"?size=100&start=0")
+        driver.get(url+"?subcatid=undefined&size=100&start=0&col=3&order=desc")
         time.sleep(3)
         driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
         labelNameStr = row[0].replace('/', '-')
@@ -96,7 +98,7 @@ try:
             for item in range(pageSize):
             #    print(item)
                 pageLimt = int(item)*100
-                pageUrl = url+"?size=100&start="+ str(pageLimt)
+                pageUrl = url+"?col=3&order=desc&size=100&start="+ str(pageLimt)
                 driver.get(pageUrl)
                 time.sleep(3)
                 print("=========")
@@ -113,3 +115,4 @@ try:
 finally:
    driver.quit()
 print("dene")
+
